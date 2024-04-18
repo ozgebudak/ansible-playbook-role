@@ -1,0 +1,10 @@
+---
+cert_manager_helm_chart: https://charts.jetstack.io
+cert_manager_version: "1.5.1"
+cert_manager_chart_version: "{{ cert_manager_version }}"
+cert_manager_release_name: "cert-manager"
+cert_manager_release_namespace: "cert-manager"
+github_mirror: https://github.com/
+
+crd_install_yaml_url: "{{ github_mirror }}jetstack/cert-manager/releases/download/v{{cert_manager_version}}/cert-manager.crds.yaml"
+

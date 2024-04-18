@@ -1,0 +1,24 @@
+#- name: Deploy RKE2
+#  hosts: all
+#  become: yes
+#  roles:
+#    - role: lablabs.rke2
+
+#- name: Setup kubeconfig on masters
+#  hosts: masters
+#  become: yes
+#  roles:
+#    - setup-rke2-kubeconfig
+
+#- name: Install rancher and configure k8s cluster
+#  hosts: masters[0]
+#  become: yes
+#  roles:
+#    - install-helm
+
+- name: Install rancher and configure k8s cluster
+  hosts: masters[0]
+  become: yes
+  roles:
+  #  - install-cert-manager
+    - install-metallb

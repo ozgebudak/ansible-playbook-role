@@ -1,0 +1,41 @@
+---
+#- name: Add metallb helm chart
+#  kubernetes.core.helm_repository:
+#    name: metallb
+#    repo_url: "{{ metallb_helm_chart }}"
+
+#- name: Install metallb helm chart
+#  kubernetes.core.helm:
+#    name: "{{ metallb_release_name }}"
+#    chart_ref: metallb/metallb
+#    release_namespace: "{{ metallb_release_namespace }}"
+#    chart_version: "{{ metallb_chart_version }}"
+#    values: "{{ metallb_config_values }}"
+
+#- name: Add metallb helm chart
+#  ansible.builtin.shell: |
+#     helm repo add metallb {{ metallb_helm_chart }}
+#     helm repo update
+
+# - name: Ansible create file with content example
+#   ansible.builtin.copy:
+#     dest: /tmp/metallb-helm-chart-values.yml
+#     content: "{{ metallb_config_values | to_nice_yaml(indent=2, explicit_start=True) }}"
+
+#- name: Install metallb helm chart
+#  ansible.builtin.shell: |
+#     helm install metallb metallb/metallb -f /tmp/metallb-helm-chart-values.yml
+
+
+# Steps to install Metallb
+
+
+- name: Apply MetalLB ConfigMap
+  ansible.builtin.shell:
+    cmd: kubectl apply -f {{ user_home_directory }}/home/erkut/rke2-lablabs/roles/install-metallb/defaults/metallb.yaml
+  when: inventory_hostname == 'master'
+
+- name: Apply MetalLB ConfigMap
+  ansible.builtin.shell:
+    cmd: kubectl apply -f {{ user_home_directory }}/home/erkut/rke2-lablabs/roles/install-metallb/defaults/metallb-config.yaml
+  when: inventory_hostname == 'master'

@@ -1,0 +1,77 @@
+---
+# echo 'export PATH=/var/lib/rancher/rke2/bin:$PATH' >> /etc/bash.bashrc
+# sudo sed -i 's|127.0.0.1|192.168.1.200|g' /etc/rancher/rke2/rke2.yaml
+# mkdir ~/.kube
+# sudo mkdir /root/.kube
+# sudo cp /etc/rancher/rke2/rke2.yaml ~/.kube/config
+# sudo cp /etc/rancher/rke2/rke2.yaml /root/.kube/config
+# sudo chown -R $USER:$USER ~/.kube/config
+
+- debug: msg="{{ group_names }}"
+
+- name: remove the folder
+  ansible.builtin.file:
+    path: "/usr/local/bin/{{ item }}"
+    state: absent
+  with_items:
+    - kubectl
+    - crictl
+  when: "'masters' in group_names"
+
+- name: setup nginx sites-available symlink
+  file:
+    path: "/usr/local/bin/{{ item }}"
+    src: "/var/lib/rancher/rke2/bin/{{ item }}"
+    state: link
+    force: yes
+  with_items:
+    - kubectl
+    - crictl
+  when: "'masters' in group_names"
+
+# - name: Add rke2 binaries to PATH for all shell sessions
+#   ansible.builtin.lineinfile:
+#     path: /etc/bash.bashrc
+#     line: export PATH=/var/lib/rancher/rke2/bin:$PATH
+#   when: "'masters' in group_names"
+
+#- name: Replace api-server IP address in kubeconfig file
+#  ansible.builtin.replace:
+#    path: /etc/rancher/rke2/rke2.yaml
+#    regexp: "127.0.0.1"
+#    replace: "{{rke2_api_ip}}"
+#  when: "'masters' in group_names"
+
+- name: Create a .kube directory for current user
+  ansible.builtin.file:
+    path: "/home/{{ ansible_user }}/.kube"
+    state: directory
+  when: ("'masters' in group_names") and (ansible_user != 'root')
+
+- name: Set .kube/config for the current user
+  ansible.builtin.copy:
+    src: /etc/rancher/rke2/rke2.yaml
+    dest: "/home/{{ ansible_user }}/.kube/config"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: u=rw,g-rwx,o-rwx
+    remote_src: yes
+  when: ("'masters' in group_names") and (ansible_user != 'root')
+
+- name: Create a .kube directory for root
+  ansible.builtin.file:
+    path: /root/.kube
+    state: directory
+    owner: root
+    group: root
+  when: "'masters' in group_names"
+
+- name: Set .kube/config for the current user
+  ansible.builtin.copy:
+    src: /etc/rancher/rke2/rke2.yaml
+    dest: /root/.kube/config
+    owner: root
+    group: root
+    mode: u=rw,g-rwx,o-rwx
+    remote_src: yes
+  when: "'masters' in group_names"
