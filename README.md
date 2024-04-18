@@ -1,1 +1,1 @@
-# ansible-playbook-role
+ansible-playbook -i inventory.yaml rke2-install.yaml --extra-vars "ansible_sudo_pass=<makina şifresi>"
