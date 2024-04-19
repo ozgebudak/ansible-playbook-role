@@ -19,15 +19,5 @@ all:
     ansible_user: erkut
     ansible_ssh_private_key_file: ~/.ssh/id_rsa
 
-    ### lablabs.rke2 variables
-#    rke2_airgap_mode: true
-#    rke2_artifact_url: http://10.63.108.11:8081/repository/github.com/rancher/rke2/releases/download
-#    rke2_ha_mode: true
-    #rke2_server_taint: true
-    ## after&contains lab.labs/rke2 1.19.0 version
-#    rke2_server_node_taints:
-#      - 'CriticalAddonsOnly=true:NoExecute'
-#    rke2_install_bash_url: http://10.63.108.11:8081/repository/github.com/rancher/rke2/raw/master/install.sh
-#    rke2_api_ip: 10.63.108.60
-#    rke2_download_kubeconf: true
+    
     rke2_version: v1.26.9+rke2r1 #latest stable v1.26.9+rke2r1 // v1.21.10+rke2r2 v1.22.17+rke2r1 v1.23.17+rke2r1 v1.24.17+rke2r1 v1.25.14+rke2r1
